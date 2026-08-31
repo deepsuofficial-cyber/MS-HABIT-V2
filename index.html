@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05060a">
+<title>MS HABIT MACRAS V2</title>
+<style>
+:root{--bg:#05060a;--panel:#0b0d14;--panel2:#0f121b;--red:#e21b2d;--blue:#1678ff;--text:#f5f6f8;--muted:#8d96a5;--line:#252c39;--green:#45df63;--yellow:#ffbf4d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+body{overflow:hidden;touch-action:manipulation}
+button,input,textarea{font:inherit}button{touch-action:manipulation;cursor:pointer}
+.app{height:100dvh;display:flex;flex-direction:column;background:radial-gradient(circle at 95% 4%,rgba(22,120,255,.11),transparent 28%),radial-gradient(circle at 0 42%,rgba(226,27,45,.10),transparent 32%),#05060a}
+.top{height:72px;flex:none;padding:calc(8px + env(safe-area-inset-top)) 15px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #151923;background:rgba(4,5,8,.97);position:relative;z-index:8}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:42px;height:42px;flex:none;border-radius:13px;border:1px solid #8e1a28;background:#0d090c;display:grid;place-items:center;font-weight:900;color:#ff3347;box-shadow:0 0 20px rgba(226,27,45,.25),inset 4px 4px 9px #000,inset -2px -2px 6px #171b24}.brand b{font-size:14px;letter-spacing:1.5px;white-space:nowrap}.brand small{display:block;color:#66707f;font-size:8px;letter-spacing:1.6px;margin-top:3px;white-space:nowrap}
+.iconbtn{width:42px;height:42px;border-radius:13px;border:1px solid #2b3240;background:#0c0e14;color:#fff;font-size:22px;box-shadow:6px 7px 14px #000,-2px -2px 7px #171b25;display:grid;place-items:center}.iconbtn:active,.btn:active,.navbtn:active,.day:active,.record:active{transform:translateY(2px) scale(.985);box-shadow:inset 4px 4px 10px #000}
+main{flex:1;overflow:auto;padding:17px 14px calc(105px + env(safe-area-inset-bottom));scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.view{display:none;animation:up .2s ease}.view.active{display:block}@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{padding:20px 18px;border:1px solid #242b38;border-radius:22px;background:linear-gradient(145deg,#10131c,#080a0f);box-shadow:10px 14px 28px #000,inset 0 1px rgba(255,255,255,.045);margin-bottom:13px}.kicker{color:#e52235;font-size:10px;font-weight:900;letter-spacing:2.5px}.hero h1{font-size:28px;margin:7px 0 7px;letter-spacing:1px}.hero p{margin:0;color:#8e96a5;line-height:1.48;font-size:13px}
+.btn{border:1px solid #55202a;color:#fff;background:linear-gradient(145deg,#171a22,#0a0c11);border-radius:15px;padding:14px 16px;font-weight:900;letter-spacing:1px;box-shadow:7px 8px 16px #000,inset 0 1px rgba(255,255,255,.06);transition:.11s;min-height:50px}.btn.primary{background:linear-gradient(145deg,#aa1426,#500812);border-color:#ed3346;box-shadow:0 0 22px rgba(226,27,45,.18),7px 8px 17px #000,inset 0 1px rgba(255,255,255,.08)}.btn.blue{border-color:#1850a1;background:linear-gradient(145deg,#0c2c61,#071225);box-shadow:0 0 18px rgba(22,120,255,.13),7px 8px 17px #000}.btn.danger{border-color:#6e1f2a;color:#ff6875}.full{width:100%}.btn.small{min-height:40px;padding:10px 12px;font-size:10px}
+.section-title{font-size:11px;letter-spacing:2.5px;color:#9ba2af;margin:18px 4px 10px;font-weight:900}
+.card{border:1px solid #252c38;background:linear-gradient(145deg,#0e1118,#090b10);border-radius:19px;padding:16px;box-shadow:9px 11px 22px #000,inset 0 1px rgba(255,255,255,.035);margin-bottom:12px}
+.challenge-title{font-size:23px;font-weight:900;letter-spacing:1px}.date-row{display:flex;justify-content:space-between;gap:10px;margin:12px 0;color:#a8afbb;font-size:11px}.date-row b{display:block;color:#fff;font-size:13px;margin-top:4px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.stat{padding:11px;border-radius:14px;border:1px solid #202632;background:#080a0f;text-align:center}.stat small{display:block;color:#7d8593;font-size:8px;letter-spacing:1px}.stat strong{display:block;font-size:21px;margin-top:4px}.progress{height:14px;background:#05060a;border:1px solid #262d39;border-radius:99px;overflow:hidden;margin-top:12px;box-shadow:inset 3px 3px 7px #000}.bar{height:100%;width:0;background:linear-gradient(90deg,#e21b2d,#8b3554,#1678ff);box-shadow:0 0 14px rgba(22,120,255,.5);transition:width .6s ease}
+.empty{text-align:center;padding:34px 18px}.empty .orb{width:70px;height:70px;border-radius:50%;margin:0 auto 15px;border:1px solid #56202a;background:#0d080a;display:grid;place-items:center;font-size:30px;box-shadow:0 0 28px rgba(226,27,45,.18),inset 4px 4px 10px #000}.empty h2{margin:0 0 8px}.empty p{color:#7f8794;font-size:13px;line-height:1.5}
+.timeline{display:flex;flex-direction:column;gap:8px}.day{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid #202631;border-radius:15px;background:#090b10;box-shadow:4px 5px 11px #000;transition:.11s}.daynum{width:42px;height:42px;flex:none;border-radius:12px;background:#0d1017;border:1px solid #29303d;display:grid;place-items:center;font-weight:900}.dayinfo{flex:1;min-width:0}.dayinfo b{font-size:12px}.dayinfo small{display:block;color:#777f8d;margin-top:4px}.status{font-size:8px;font-weight:900;letter-spacing:1px;padding:7px 8px;border-radius:99px;border:1px solid #2a303b;color:#8b93a1}.status.today{color:#ffb6bd;border-color:#8d1f2d;background:#21090d}.status.done{color:#63e878;border-color:#1e7330;background:#07170b}.status.missed{color:#ff6875;border-color:#70202b;background:#1a070a}.status.locked{color:#68707c}
+.goal{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #232a35;border-radius:14px;background:#090b10;margin-bottom:8px}.goal input{width:21px;height:21px;accent-color:#e21b2d;flex:none}.goal span{font-size:14px;line-height:1.35}.goal.done span{text-decoration:line-through;color:#737b89}
+.sheetback,.modalback{position:fixed;inset:0;background:rgba(0,0,0,.74);backdrop-filter:blur(5px);display:none;z-index:20}.sheetback.open,.modalback.open{display:flex}.sheetback.open{align-items:flex-end}.sheet{width:100%;max-height:94dvh;overflow:auto;background:#090b10;border-top:1px solid #303644;border-radius:24px 24px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -24px 70px #000;animation:sheet .22s ease;overscroll-behavior:contain}@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}.grab{width:42px;height:4px;border-radius:99px;background:#3b414d;margin:4px auto 15px}.sheet h2{margin:0 0 15px;font-size:20px}.field{margin:10px 0}.field label{display:block;font-size:10px;letter-spacing:1.5px;color:#858d9b;margin:0 0 7px;font-weight:900}.field input,.field textarea{width:100%;border:1px solid #292f3b;background:#05060a;color:#fff;border-radius:13px;padding:13px;outline:none;min-height:48px;-webkit-appearance:none}.field textarea{min-height:82px;resize:none}.field input:focus,.field textarea:focus{border-color:#8f2431;box-shadow:0 0 0 2px rgba(226,27,45,.10)}.duration{padding:13px;border-radius:13px;border:1px solid #164b9a;background:#071226;color:#79adff;font-weight:900;text-align:center;margin:10px 0}.error{color:#ff6674;font-size:11px;min-height:16px}
+.setupHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0}.setupHead b{font-size:12px;letter-spacing:1px}.dayPicker{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;max-height:150px;overflow:auto;padding:2px}.pick{border:1px solid #232a35;background:#0a0c12;color:#87909e;border-radius:11px;padding:10px 4px;font-size:9px;font-weight:900}.pick.active{border-color:#e21b2d;color:#fff;background:#1a080d;box-shadow:0 0 14px rgba(226,27,45,.13)}.goalEditor{border:1px solid #252c38;border-radius:16px;padding:12px;background:#080a0f}.goalEditorRow{display:flex;gap:7px;margin-bottom:7px}.goalEditorRow input{flex:1;min-width:0;border:1px solid #292f3b;background:#05060a;color:#fff;border-radius:11px;padding:11px;outline:none}.goalEditorRow button{width:42px;border:1px solid #5b202b;border-radius:11px;background:#15090d;color:#ff6674}.setupActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.menu{position:fixed;z-index:30;top:65px;right:12px;width:215px;display:none;background:#0b0d13;border:1px solid #2b313d;border-radius:16px;padding:7px;box-shadow:0 18px 40px #000}.menu.open{display:block}.menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#dfe2e8;padding:12px;border-radius:10px}.menu button:active{background:#171a22}
+.nav{position:fixed;z-index:10;left:0;right:0;bottom:0;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:rgba(5,6,10,.97);border-top:1px solid #171c25;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.navbtn{border:1px solid #202631;background:#0b0d13;color:#707887;border-radius:14px;min-height:52px;font-size:10px;font-weight:900;letter-spacing:1.5px;transition:.12s}.navbtn.active{color:#fff;border-color:#64202b;background:#16090c;box-shadow:0 0 18px rgba(226,27,45,.15),inset 0 0 12px rgba(22,120,255,.06)}
+.toast{position:fixed;z-index:50;left:50%;bottom:86px;transform:translate(-50%,24px);opacity:0;pointer-events:none;background:#11151d;border:1px solid #394352;border-radius:13px;padding:11px 15px;font-size:11px;font-weight:800;box-shadow:0 12px 28px #000;transition:.2s;white-space:nowrap;max-width:calc(100vw - 28px);overflow:hidden;text-overflow:ellipsis}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modalback{align-items:center;justify-content:center;padding:18px}.modal{width:min(430px,100%);border:1px solid #343b49;border-radius:22px;background:linear-gradient(145deg,#10131b,#080a0f);padding:20px;box-shadow:0 25px 80px #000,0 0 35px rgba(226,27,45,.08);animation:pop .2s ease}@keyframes pop{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}.modal .modalIcon{width:58px;height:58px;margin:0 auto 12px;border-radius:17px;display:grid;place-items:center;background:#16080c;border:1px solid #7b202c;box-shadow:0 0 22px rgba(226,27,45,.18),inset 4px 4px 9px #000;font-size:25px}.modal h3{text-align:center;margin:0 0 8px;font-size:18px}.modal p{text-align:center;color:#858d9b;font-size:12px;line-height:1.5;margin:0 0 16px}.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.record{display:flex;justify-content:space-between;align-items:center;gap:12px}.record h3{margin:0 0 5px}.record small{color:#7e8693}.record .pct{font-weight:900;color:#49d65c;font-size:18px}.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.detail{border:1px solid #202631;border-radius:13px;padding:11px;background:#080a0f}.detail small{display:block;color:#777f8c;font-size:9px;letter-spacing:1px}.detail b{display:block;margin-top:5px;font-size:13px}.historyGoals{margin:7px 0 14px 54px}.historyGoals .mini{font-size:11px;color:#8e97a5;margin:4px 0}.historyGoals .mini.done{color:#62df73}.historyGoals .mini.missed{color:#ff6875}
+@media(min-width:700px){main{max-width:720px;width:100%;margin:auto}.top{padding-left:max(16px,calc((100vw - 720px)/2 + 16px));padding-right:max(16px,calc((100vw - 720px)/2 + 16px))}.nav{left:50%;right:auto;transform:translateX(-50%);width:520px;border:1px solid #222936;border-bottom:0;border-radius:18px 18px 0 0}}
+
+.readonlyGoal{cursor:default!important;opacity:.96}
+.goalCheck{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:10px;background:#080b12;border:1px solid #252c39;color:#697384;font-weight:900;box-shadow:inset 2px 2px 5px rgba(0,0,0,.7),2px 2px 7px rgba(0,0,0,.35)}
+.goalCheck.checked{color:#55df68;border-color:rgba(69,223,99,.35);box-shadow:inset 2px 2px 5px rgba(0,0,0,.75),0 0 12px rgba(69,223,99,.14)}
+.sheetTopRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><div class="logo">MS</div><div><b>MS HABIT MACRAS</b><small>DISCIPLINE • CONSISTENCY • TRANSFORMATION</small></div></div>
+  <button class="iconbtn" id="menuBtn" aria-label="Menu">⋮</button>
+</header>
+
+<div class="menu" id="menu">
+  <button id="instructionsBtn">INSTRUCTIONS</button>
+  <button id="aboutBtn">ABOUT V2</button>
+</div>
+
+<main>
+<section class="view active" id="homeView">
+  <div class="hero"><div class="kicker">WELCOME TO YOUR ARC</div><h1>BUILD DISCIPLINE.</h1><p>Create one challenge, assign every day its own mission, and keep your entire journey stored locally on your device.</p></div>
+  <button class="btn primary full" id="createBtn">＋ CREATE YOUR CHALLENGE</button>
+  <div id="homeContent"></div>
+</section>
+
+<section class="view" id="trackView"><div id="trackContent"></div></section>
+
+<section class="view" id="recordsView"><div class="section-title">SAVED RECORDS</div><div id="recordsContent"></div></section>
+
+<section class="view" id="instructionsView">
+  <div class="hero"><div class="kicker">MS HABIT MACRAS V2</div><h1>INSTRUCTIONS</h1><p>Your discipline data stays on this device. No login, server, or cloud is required.</p></div>
+  <div class="card"><b>LOCAL DATA</b><p>Challenge progress, individual daily goals, completion states and records are stored in localStorage.</p></div>
+  <div class="card"><b>APP DATA</b><p>Everything persists after closing, reopening, leaving the page, or refreshing the browser.</p></div>
+  <div class="card"><b>NO CLOUD</b><p>This single-file app does not send your challenge data to a server.</p></div>
+  <div class="card"><b>ONE ACTIVE CHALLENGE</b><p>Only one challenge can be active at a time. Pack a completed challenge into Records before starting another.</p></div>
+  <div class="card"><b>DAILY GOALS</b><p>Every day can have its own goals. During setup you can add, edit, delete, copy to the next day, or copy to selected days.</p></div>
+  <div class="card"><b>DAY SYSTEM</b><p>Day 1 begins on the challenge start date. Only today's day can be completed. Future days stay locked. Uncompleted past days become MISSED.</p></div>
+  <div class="card"><b>RECORD SYSTEM</b><p>When every day is completed, PACK &amp; SAVE RECORD stores the complete daily history. Record Details can export a visual PNG record with all daily goals.</p></div>
+</section>
+</main>
+
+<nav class="nav">
+  <button class="navbtn active" data-view="home">HOME</button>
+  <button class="navbtn" data-view="track" id="trackNav">TRACK</button>
+  <button class="navbtn" data-view="records">RECORDS</button>
+</nav>
+
+<div class="sheetback" id="sheetBack">
+  <div class="sheet" id="createSheet">
+    <div class="grab"></div>
+    <h2 id="createTitle">CREATE YOUR CHALLENGE</h2>
+    <div id="setupDetails">
+      <div class="field"><label>CHALLENGE NAME</label><input id="cName" type="text" maxlength="60" autocomplete="off" placeholder="e.g. WINTER ARC"></div>
+      <div class="field"><label>CHALLENGE START DATE</label><input id="cStart" type="date"></div>
+      <div class="field"><label>CHALLENGE END DATE</label><input id="cEnd" type="date"></div>
+      <div class="duration" id="durationBox">TOTAL DURATION — SELECT DATES</div>
+      <div class="error" id="formError"></div>
+      <button class="btn primary full" id="continueSetupBtn">CONTINUE TO DAILY GOALS</button>
+      <button class="btn full" id="cancelCreateBtn" style="margin-top:8px">CANCEL</button>
+    </div>
+
+    <div id="setupGoals" style="display:none">
+      <div class="card" style="padding:13px">
+        <div style="font-size:11px;color:#9da5b3;font-weight:900;letter-spacing:1px">DAILY GOAL SETUP</div>
+        <div id="setupSummary" style="font-size:12px;margin-top:5px"></div>
+      </div>
+      <div class="setupHead"><b id="selectedDayTitle">DAY 01</b><button class="btn small blue" id="copySelectedBtn">COPY TO SELECTED</button></div>
+      <div class="dayPicker" id="dayPicker"></div>
+      <div class="goalEditor" id="goalEditor"></div>
+      <div class="setupActions">
+        <button class="btn blue small" id="copyNextBtn">COPY TO NEXT DAY</button>
+        <button class="btn primary small" id="finishSetupBtn">CREATE CHALLENGE</button>
+      </div>
+      <button class="btn full small" id="backDetailsBtn" style="margin-top:8px">← BACK TO DETAILS</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modalback" id="modalBack"></div>
+
+<script>
+(()=>{
+'use strict';
+const KEY='MS_HABIT_MACRAS_V2';
+let state=loadState();
+let audioCtx=null;
+let setup={name:'',start:'',end:'',total:0,days:[],selected:1};
+
+function loadState(){try{const x=JSON.parse(localStorage.getItem(KEY));return x&&Array.isArray(x.records)?x:{active:null,records:[]}}catch(e){return{active:null,records:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function uid(){return 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2,9)}
+function dateObj(s){const [y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d)}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return iso(new Date())}
+function diffDays(a,b){return Math.round((dateObj(b)-dateObj(a))/86400000)+1}
+function fmt(s){return dateObj(s).toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'}).toUpperCase()}
+function shortFmt(s){return dateObj(s).toLocaleDateString(undefined,{day:'2-digit',month:'short'}).toUpperCase()}
+function dayIndex(ch){return Math.floor((dateObj(today())-dateObj(ch.startDate))/86400000)+1}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function safeName(s){return String(s).toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'')||'CHALLENGE'}
+
+function showToast(t){
+ const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');
+ clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove('show'),1900);
+}
+function sound(){
+ try{
+  audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type='sine';o.frequency.setValueAtTime(430,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(760,audioCtx.currentTime+.065);
+  g.gain.setValueAtTime(1,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.11);
+  o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.12);
+ }catch(e){}
+}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button'))sound()},{passive:true});
+
+function openModal(title,msg,icon,actions){
+ const back=document.getElementById('modalBack');
+ back.innerHTML='<div class="modal"><div class="modalIcon">'+icon+'</div><h3>'+esc(title)+'</h3><p>'+esc(msg)+'</p><div class="modalActions">'+actions+'</div></div>';
+ back.classList.add('open');
+ return back;
+}
+function closeModal(){document.getElementById('modalBack').classList.remove('open');document.getElementById('modalBack').innerHTML=''}
+document.getElementById('modalBack').addEventListener('click',e=>{if(e.target.id==='modalBack')closeModal()});
+
+function syncHistory(ch){
+ const now=today();
+ if(dayIndex(ch)<1)return;
+ ch.daily.forEach(x=>{if(x.status==='pending'&&x.date<now)x.status='missed'});
+ save();
+}
+function completedCount(ch){return ch.daily.filter(x=>x.status==='completed').length}
+function progress(ch){return ch.totalDays?Math.round(completedCount(ch)/ch.totalDays*100):0}
+function activeStatus(ch,i){
+ const x=ch.daily[i-1];if(!x)return'locked';
+ if(x.status==='completed')return'completed';
+ if(x.status==='missed')return'missed';
+ const cur=dayIndex(ch);
+ if(i===cur)return'today';
+ return i>cur?'locked':'missed';
+}
+
+function renderHome(){
+ const el=document.getElementById('homeContent'),ch=state.active;
+ if(!ch){el.innerHTML='<div class="card empty"><div class="orb">⚡</div><h2>NO ACTIVE CHALLENGE</h2><p>Your next arc starts when you create it. Every day can have its own mission. Start small, stay consistent, finish strong.</p></div>';return}
+ syncHistory(ch);
+ const done=completedCount(ch),pct=progress(ch),raw=dayIndex(ch),cur=clamp(raw,1,ch.totalDays),remaining=Math.max(ch.totalDays-done,0);
+ el.innerHTML='<div class="section-title">ACTIVE CHALLENGE</div><div class="card">'+
+ '<div class="challenge-title">'+esc(ch.name)+'</div>'+
+ '<div class="date-row"><div>START<b>'+fmt(ch.startDate)+'</b></div><div>END<b>'+fmt(ch.endDate)+'</b></div></div>'+
+ '<div class="stats"><div class="stat"><small>TOTAL DAYS</small><strong>'+ch.totalDays+'</strong></div><div class="stat"><small>CURRENT DAY</small><strong>'+(raw<1?'—':raw>ch.totalDays?'DONE':cur)+'</strong></div><div class="stat"><small>COMPLETED DAYS</small><strong>'+done+'</strong></div><div class="stat"><small>REMAINING DAYS</small><strong>'+remaining+'</strong></div></div>'+
+ '<div style="display:flex;justify-content:space-between;margin-top:14px;font-size:11px;color:#8b93a0"><span>DAY PROGRESS</span><b>'+pct+'% COMPLETE</b></div><div class="progress"><div class="bar" style="width:'+pct+'%"></div></div></div>'+
+ (pct<100?'<button class="btn blue full" id="openTodayBtn">OPEN TODAY\'S MISSION</button>':'<div class="card" style="text-align:center;border-color:#1d6d2e"><b style="color:#55df68;letter-spacing:2px">CHALLENGE COMPLETE</b><p style="color:#7f8794;font-size:12px">Your full arc is complete. Pack this achievement into Records.</p><button class="btn primary full" id="packHomeBtn">PACK &amp; SAVE RECORD</button></div>')+
+ '<button class="btn danger full" id="deleteBtn" style="margin-top:9px">DELETE CHALLENGE</button>';
+ document.getElementById('openTodayBtn')?.addEventListener('click',()=>openDay(cur));
+ document.getElementById('packHomeBtn')?.addEventListener('click',packRecord);
+ document.getElementById('deleteBtn')?.addEventListener('click',deleteChallenge);
+}
+
+function renderTrack(){
+ const el=document.getElementById('trackContent'),ch=state.active;
+ if(!ch){el.innerHTML='<div class="card empty"><div class="orb">🔒</div><h2>TRACK UNAVAILABLE</h2><p>Create an active challenge first.</p></div>';return}
+ syncHistory(ch);const cur=dayIndex(ch),pct=progress(ch);
+ let days='';
+ ch.daily.forEach((x,i)=>{
+  const n=i+1,s=activeStatus(ch,n),label=s==='today'?'TODAY':s.toUpperCase();
+  const goalCount=Array.isArray(x.goals)?x.goals.length:0;
+  days+='<div class="day" data-day="'+n+'"><div class="daynum">'+String(n).padStart(2,'0')+'</div><div class="dayinfo"><b>DAY '+n+'</b><small>'+fmt(x.date)+(goalCount?' • '+goalCount+' GOAL'+(goalCount===1?'':'S'):' • NO GOALS')+'</small></div><span class="status '+(s==='today'?'today':s==='completed'?'done':s==='missed'?'missed':'locked')+'">'+label+'</span></div>';
+ });
+ el.innerHTML='<div class="section-title">TRACK</div><div class="card"><div class="challenge-title">'+esc(ch.name)+'</div><div class="date-row"><div>START<b>'+fmt(ch.startDate)+'</b></div><div>END<b>'+fmt(ch.endDate)+'</b></div></div><div style="font-size:11px;color:#8d95a2">DAY '+(cur<1?'NOT STARTED':cur>ch.totalDays?'COMPLETE':cur)+' / '+ch.totalDays+'</div><div style="font-size:10px;color:#77808e;margin-top:10px">DAY PROGRESS • '+pct+'%</div><div class="progress"><div class="bar" style="width:'+pct+'%"></div></div></div><div class="timeline">'+days+'</div>';
+ el.querySelectorAll('.day').forEach(d=>d.addEventListener('click',()=>openDay(Number(d.dataset.day))));
+}
+
+function openGoalSetup(n,auto=false){
+ const ch=state.active;if(!ch)return;
+ const cur=dayIndex(ch),item=ch.daily[n-1];
+ if(!item||n!==cur||item.status==='completed'||item.status==='missed')return;
+ const box=document.createElement('div');box.className='modalback open';box.id='goalSetupBack';
+ box.innerHTML='<div class="modal" style="max-height:88dvh;overflow:auto"><div class="modalIcon">🎯</div><h3>SET TODAY\'S GOALS</h3><p>DAY '+String(n).padStart(2,'0')+' • '+fmt(item.date)+'<br><span style="color:#7d8796">Add the goals you want to complete today.</span></p><div id="todayGoalRows"></div><button class="btn blue full small" id="addTodayGoal">＋ ADD GOAL</button><div class="modalActions"><button class="btn full" id="skipTodayGoals">LATER</button><button class="btn primary full" id="saveTodayGoals">SAVE GOALS</button></div></div>';
+ document.body.appendChild(box);
+ const rows=box.querySelector('#todayGoalRows');
+ let draft=(Array.isArray(item.goals)?item.goals:[]).map(x=>String(x));
+ function render(){
+  rows.innerHTML=draft.length?draft.map((g,i)=>'<div class="goalEditorRow"><input type="text" maxlength="180" value="'+esc(g)+'" placeholder="Enter your goal..."><button data-del="'+i+'" aria-label="Delete goal">×</button></div>').join(''):'<div style="color:#737d8a;font-size:11px;padding:8px 2px 12px">No goals added yet.</div>';
+  rows.querySelectorAll('input').forEach((inp,i)=>inp.addEventListener('input',()=>draft[i]=inp.value));
+  rows.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{draft.splice(Number(b.dataset.del),1);render();}));
+ }
+ function close(){box.remove()}
+ box.querySelector('#addTodayGoal').addEventListener('click',()=>{draft.push('');render();setTimeout(()=>rows.querySelectorAll('input')[draft.length-1]?.focus(),40);});
+ box.querySelector('#skipTodayGoals').addEventListener('click',()=>{close();if(auto)showToast('GOALS CAN BE ADDED ANYTIME TODAY');});
+ box.querySelector('#saveTodayGoals').addEventListener('click',()=>{
+  draft=draft.map(x=>x.trim()).filter(Boolean);item.goals=draft.slice();state.active.goalPromptedDate=today();save();close();renderAll();showToast(draft.length?'TODAY\'S GOALS SAVED ✓':'NO GOALS ADDED');
+ });
+ box.addEventListener('click',e=>{if(e.target===box)close()});
+ render();
+ setTimeout(()=>rows.querySelector('input')?.focus(),100);
+}
+function promptTodayGoals(){
+ const ch=state.active;if(!ch)return;
+ syncHistory(ch);const n=dayIndex(ch);
+ if(n<1||n>ch.totalDays)return;
+ const item=ch.daily[n-1];
+ if(item.status!=='pending')return;
+ if((item.goals||[]).length===0 && ch.goalPromptedDate!==today()) openGoalSetup(n,true);
+}
+
+function openDay(n){
+ const ch=state.active;if(!ch)return;
+ syncHistory(ch);
+ const cur=dayIndex(ch),item=ch.daily[n-1];
+ if(!item)return;
+
+ /* Previous days are now VIEW-ONLY: their exact goals/history can be inspected,
+    but they can never be edited or completed retroactively. */
+ const previous=n<cur;
+ if(n>cur){showToast('FUTURE DAY IS LOCKED');return}
+ if(n===cur && item.status==='completed'){showToast('DAY ALREADY COMPLETED');return}
+ if(n===cur && item.status==='missed'){showToast('MISSED DAY CANNOT BE COMPLETED');return}
+
+ const goals=Array.isArray(item.goals)?item.goals:[];
+ const doneFlags=Array.isArray(item.goalDone)?item.goalDone:[];
+ const isPastView=previous || item.status==='completed' || item.status==='missed';
+
+ const box=document.createElement('div');box.className='sheetback open';box.id='daySheetBack';
+
+ if(isPastView){
+   const statusText=item.status==='completed'?'✓ COMPLETED':'✕ MISSED';
+   const statusClass=item.status==='completed'?'done':'missed';
+   const goalRows=goals.length
+     ? goals.map((g,i)=>{
+         const done=item.status==='completed' ? (doneFlags[i]!==false) : false;
+         return '<div class="goal readonlyGoal"><span class="goalCheck '+(done?'checked':'')+'">'+(done?'✓':'○')+'</span><span>'+esc(g)+'</span></div>';
+       }).join('')
+     : '<div class="card"><b>NO GOALS SET</b><p style="color:#818998;font-size:12px">No daily goals were assigned for this day.</p></div>';
+
+   box.innerHTML='<div class="sheet"><div class="grab"></div>'+
+     '<div class="sheetTopRow"><div><div class="eyebrow">DAY HISTORY</div><h2 style="margin:4px 0 0">DAY '+String(n).padStart(2,'0')+'</h2></div>'+
+     '<span class="status '+statusClass+'">'+statusText+'</span></div>'+
+     '<div class="card" style="padding:13px;margin-top:12px"><div class="date-row"><div>DATE<b>'+fmt(item.date)+'</b></div><div>DAY<b>'+n+' / '+ch.totalDays+'</b></div></div>'+
+     '<div style="font-size:10px;color:#7f8998;margin-top:10px;letter-spacing:1.2px">READ-ONLY HISTORY</div></div>'+
+     '<div class="section-title">GOALS FOR THIS DAY</div>'+goalRows+
+     '<div class="card" style="margin-top:10px;border-color:rgba(22,120,255,.25)"><div style="font-size:10px;color:#8290a3;letter-spacing:1.4px;font-weight:900">LOCKED HISTORY</div>'+
+     '<p style="margin:7px 0 0;color:#aab1bc;font-size:12px;line-height:1.5">Previous days are preserved exactly as recorded. Goals and completion history cannot be changed.</p></div>'+
+     '<button class="btn full" id="closeDayBtn" style="margin-top:10px">CLOSE</button></div>';
+   document.body.appendChild(box);
+   box.querySelector('#closeDayBtn').addEventListener('click',()=>box.remove());
+   box.addEventListener('click',e=>{if(e.target===box)box.remove()});
+   return;
+ }
+
+ const goalDone=goals.map((_,i)=>doneFlags[i]===true);
+ box.innerHTML='<div class="sheet"><div class="grab"></div>'+
+   '<div class="sheetTopRow"><div><div class="eyebrow">TODAY\'S MISSION</div><h2 style="margin:4px 0 0">DAY '+String(n).padStart(2,'0')+'</h2></div><span class="status today">⚡ TODAY</span></div>'+
+   '<div class="card" style="padding:12px;margin-top:12px"><div style="font-size:10px;color:#858e9d;letter-spacing:1.5px;font-weight:900">DATE</div><b style="display:block;margin-top:4px">'+fmt(item.date)+'</b>'+
+   '<div style="font-size:10px;color:#858e9d;letter-spacing:1.5px;margin-top:10px">GOAL PROGRESS</div><div id="goalProgressText" style="margin-top:4px;font-weight:900">0 / '+goals.length+' GOALS</div><div class="progress" style="margin-top:8px"><div class="bar" id="goalProgressBar" style="width:0%"></div></div></div>'+
+   (goals.length
+     ? goals.map((g,i)=>'<label class="goal"><input type="checkbox" data-g="'+i+'" '+(goalDone[i]?'checked':'')+'><span>'+esc(g)+'</span></label>').join('')
+     : '<div class="card"><b>NO DAILY GOALS</b><p style="color:#818998;font-size:12px">You can still complete today without goals.</p><button class="btn blue full small" id="setGoalsFromDay" style="margin-top:9px">＋ SET TODAY\'S GOALS</button></div>')+
+   '<button class="btn primary full" id="completeDayBtn" style="margin-top:10px">✓ COMPLETE DAY</button>'+
+   '<button class="btn full" id="closeDayBtn" style="margin-top:8px">CANCEL</button></div>';
+
+ document.body.appendChild(box);
+ const checks=[...box.querySelectorAll('input[data-g]')];
+ const complete=box.querySelector('#completeDayBtn');
+ const gp=box.querySelector('#goalProgressText');
+ const bar=box.querySelector('#goalProgressBar');
+
+ box.querySelector('#setGoalsFromDay')?.addEventListener('click',()=>{box.remove();openGoalSetup(n,false)});
+
+ function update(){
+   const count=checks.filter(x=>x.checked).length;
+   const total=goals.length;
+   const percent=total?Math.round(count/total*100):100;
+   if(gp)gp.textContent=count+' / '+total+' GOALS';
+   if(bar)bar.style.width=percent+'%';
+   complete.style.opacity=(count===total)?'1':'.58';
+   complete.style.transform=(count===total)?'translateY(0)':'';
+ }
+
+ checks.forEach(x=>x.addEventListener('change',update));
+
+ complete.addEventListener('click',()=>{
+   const count=checks.filter(x=>x.checked).length;
+   if(count!==goals.length){showToast('COMPLETE ALL GOALS FIRST');return}
+
+   /* Keep goal text and completion state separate. Never overwrite goals with booleans. */
+   item.goalDone=checks.map(x=>x.checked);
+   item.status='completed';
+   item.completedAt=new Date().toISOString();
+   save();box.remove();renderAll();
+   showToast('DAY '+String(n).padStart(2,'0')+' COMPLETED ✓');
+ });
+
+ box.querySelector('#closeDayBtn').addEventListener('click',()=>box.remove());
+ box.addEventListener('click',e=>{if(e.target===box)box.remove()});
+ update();
+}
+function renderRecords(){
+ const el=document.getElementById('recordsContent');
+ if(!state.records.length){el.innerHTML='<div class="card empty"><div class="orb">🏆</div><h2>NO RECORDS YET</h2><p>Finish a challenge and pack it here as a permanent local record.</p></div>';return}
+ el.innerHTML=state.records.slice().reverse().map(r=>'<div class="card record" data-id="'+r.id+'"><div><h3>'+esc(r.name)+'</h3><small>'+fmt(r.startDate)+' → '+fmt(r.endDate)+' • '+r.totalDays+' DAYS</small></div><div class="pct">'+r.completion+'%</div></div>').join('');
+ el.querySelectorAll('.record').forEach(x=>x.addEventListener('click',()=>showRecord(x.dataset.id)));
+}
+
+function showRecord(id){
+ const r=state.records.find(x=>x.id===id);if(!r)return;
+ let history=r.daily.map(x=>{
+  const goals=Array.isArray(x.goalItems)?x.goalItems:(Array.isArray(x.goals)?x.goals.map((g,i)=>({text:g,done:x.status==='completed'})):[]);
+  return '<div class="day"><div class="daynum">'+String(x.index).padStart(2,'0')+'</div><div class="dayinfo"><b>DAY '+x.index+'</b><small>'+fmt(x.date)+'</small></div><span class="status '+(x.status==='completed'?'done':x.status==='missed'?'missed':'locked')+'">'+x.status.toUpperCase()+'</span></div>'+
+  (goals.length?'<div class="historyGoals">'+goals.map(g=>'<div class="mini '+(g.done?'done':'')+'">'+(g.done?'✓':'○')+' '+esc(g.text)+'</div>').join('')+'</div>':'');
+ }).join('');
+ const box=document.createElement('div');box.className='sheetback open';
+ box.innerHTML='<div class="sheet"><div class="grab"></div><h2>RECORD DETAILS</h2><div class="card"><div class="challenge-title">'+esc(r.name)+'</div><div class="detailgrid" style="margin-top:12px"><div class="detail"><small>START DATE</small><b>'+fmt(r.startDate)+'</b></div><div class="detail"><small>END DATE</small><b>'+fmt(r.endDate)+'</b></div><div class="detail"><small>TOTAL DAYS</small><b>'+r.totalDays+'</b></div><div class="detail"><small>COMPLETED DAYS</small><b>'+r.completedDays+'</b></div><div class="detail"><small>COMPLETION</small><b>'+r.completion+'%</b></div></div></div><div class="section-title">DAILY HISTORY + GOALS</div><div class="timeline" style="max-height:48dvh;overflow:auto">'+history+'</div><button class="btn primary full" id="exportPosterBtn" style="margin-top:12px">SAVE CHALLENGE FILE</button><button class="btn full" id="closeRecordBtn" style="margin-top:8px">CLOSE</button></div>';
+ document.body.appendChild(box);
+ box.querySelector('#exportPosterBtn').addEventListener('click',()=>exportPoster(r));
+ box.querySelector('#closeRecordBtn').addEventListener('click',()=>box.remove());
+ box.addEventListener('click',e=>{if(e.target===box)box.remove()});
+}
+
+function packRecord(){
+ const ch=state.active;if(!ch||progress(ch)<100){showToast('COMPLETE EVERY DAY FIRST');return}
+ const record=JSON.parse(JSON.stringify({id:uid(),name:ch.name,startDate:ch.startDate,endDate:ch.endDate,totalDays:ch.totalDays,completedDays:completedCount(ch),completion:100,daily:ch.daily.map(d=>({index:d.index,date:d.date,status:d.status,goalItems:(Array.isArray(d.goals)?d.goals:[]).map((text,i)=>({text,done:d.status==='completed' ? (Array.isArray(d.goalDone)?d.goalDone[i]!==false:true) : false})),completedAt:d.completedAt||null})),packedAt:new Date().toISOString()}));
+ state.records.push(record);state.active=null;save();renderAll();showToast('RECORD PACKED ✓');
+}
+
+function deleteChallenge(){
+ if(!state.active)return;
+ const back=openModal('DELETE CHALLENGE?','This will remove only the active challenge. Previously packed Records will remain safe.','⚠️','<button class="btn full" id="cancelDelete">CANCEL</button><button class="btn primary full" id="confirmDelete">YES, DELETE</button>');
+ back.querySelector('#cancelDelete').addEventListener('click',closeModal);
+ back.querySelector('#confirmDelete').addEventListener('click',()=>{state.active=null;save();closeModal();renderAll();showToast('CHALLENGE DELETED')});
+}
+
+function resetSetup(){
+ setup={name:'',start:'',end:'',total:0,days:[],selected:1};
+ document.getElementById('setupDetails').style.display='block';document.getElementById('setupGoals').style.display='none';
+ document.getElementById('createTitle').textContent='CREATE YOUR CHALLENGE';
+ document.getElementById('cName').value='';document.getElementById('cStart').value='';document.getElementById('cEnd').value='';
+ document.getElementById('durationBox').textContent='TOTAL DURATION — SELECT DATES';document.getElementById('formError').textContent='';
+}
+function openCreate(){
+ if(state.active){showToast('FINISH OR DELETE CURRENT CHALLENGE FIRST');return}
+ resetSetup();
+ document.getElementById('sheetBack').classList.add('open');
+}
+function closeCreate(){document.getElementById('sheetBack').classList.remove('open')}
+
+function updateDuration(){
+ const s=document.getElementById('cStart').value,e=document.getElementById('cEnd').value,box=document.getElementById('durationBox');
+ if(!s||!e){box.textContent='TOTAL DURATION — SELECT DATES';return}
+ if(e<s){box.textContent='INVALID DATE RANGE';return}
+ const d=diffDays(s,e);box.textContent=d>3650?'MAXIMUM 3650 DAYS':'TOTAL DURATION  •  '+d+' DAYS';
+}
+
+function continueSetup(){
+ const name=document.getElementById('cName').value.trim(),s=document.getElementById('cStart').value,e=document.getElementById('cEnd').value,er=document.getElementById('formError');
+ er.textContent='';
+ if(!name){er.textContent='Challenge name is required.';return}
+ if(!s||!e){er.textContent='Start and end dates are required.';return}
+ if(e<s){er.textContent='End date cannot be before start date.';return}
+ const total=diffDays(s,e);if(total>3650){er.textContent='Challenge duration cannot exceed 3650 days.';return}
+ setup={name,start:s,end:e,total,days:[],selected:1};
+ for(let i=0;i<total;i++){const d=dateObj(s);d.setDate(d.getDate()+i);setup.days.push({index:i+1,date:iso(d),goals:[]})}
+ document.getElementById('setupDetails').style.display='none';document.getElementById('setupGoals').style.display='block';
+ document.getElementById('createTitle').textContent='SET DAILY GOALS';
+ document.getElementById('setupSummary').innerHTML='<b>'+esc(name)+'</b> • '+total+' DAYS • '+fmt(s)+' → '+fmt(e);
+ renderSetup();
+}
+
+function renderSetup(){
+ const picker=document.getElementById('dayPicker'),editor=document.getElementById('goalEditor'),d=setup.days[setup.selected-1];
+ document.getElementById('selectedDayTitle').textContent='DAY '+String(d.index).padStart(2,'0')+' • '+shortFmt(d.date);
+ let picks='';setup.days.forEach(x=>picks+='<button class="pick '+(x.index===setup.selected?'active':'')+'" data-pick="'+x.index+'">DAY '+String(x.index).padStart(2,'0')+'<br><span style="font-weight:600">'+shortFmt(x.date)+'</span></button>');
+ picker.innerHTML=picks;
+ picker.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>{setup.selected=Number(b.dataset.pick);renderSetup()}));
+ let rows=d.goals.map((g,i)=>'<div class="goalEditorRow"><input type="text" maxlength="180" data-goal-index="'+i+'" value="'+esc(g)+'" placeholder="Enter your goal..."><button data-remove-goal="'+i+'" aria-label="Delete goal">×</button></div>').join('');
+ editor.innerHTML=(rows||'<div style="color:#737d8a;font-size:11px;padding:8px 2px">No goals for this day yet.</div>')+
+ '<button class="btn blue full small" id="addGoalBtn">＋ ADD GOAL</button><div style="font-size:9px;color:#6f7887;margin-top:8px">Each day has its own independent goals. You can leave a day empty.</div>';
+ editor.querySelectorAll('[data-goal-index]').forEach(inp=>inp.addEventListener('input',()=>{d.goals[Number(inp.dataset.goalIndex)]=inp.value}));
+ editor.querySelectorAll('[data-remove-goal]').forEach(b=>b.addEventListener('click',()=>{d.goals.splice(Number(b.dataset.removeGoal),1);renderSetup();showToast('GOAL REMOVED')}));
+ editor.querySelector('#addGoalBtn').addEventListener('click',()=>{d.goals.push('');renderSetup();setTimeout(()=>editor.querySelector('[data-goal-index="'+(d.goals.length-1)+'"]')?.focus(),40);showToast('GOAL ADDED')});
+}
+
+function copyGoalsToNext(){
+ const d=setup.days[setup.selected-1],next=setup.days[setup.selected];
+ if(!next){showToast('NO NEXT DAY');return}
+ next.goals=d.goals.slice();setup.selected=next.index;renderSetup();showToast('GOALS COPIED TO NEXT DAY ✓');
+}
+function copyGoalsSelected(){
+ const d=setup.days[setup.selected-1];
+ if(!d.goals.length){showToast('ADD GOALS FIRST');return}
+ const max=Math.min(3650,setup.days.length);
+ const back=openModal('COPY GOALS','Choose which days should receive the goals from Day '+d.index+'.','📋',
+ '<button class="btn full" id="copyAll">ALL DAYS</button><button class="btn primary full" id="copyRange">NEXT 7 DAYS</button>');
+ back.querySelector('#copyAll').addEventListener('click',()=>{setup.days.forEach(x=>{if(x.index!==d.index)x.goals=d.goals.slice()});closeModal();renderSetup();showToast('GOALS COPIED TO ALL DAYS ✓')});
+ back.querySelector('#copyRange').addEventListener('click',()=>{setup.days.forEach(x=>{if(x.index>d.index&&x.index<=Math.min(max,d.index+7))x.goals=d.goals.slice()});closeModal();renderSetup();showToast('GOALS COPIED TO NEXT 7 DAYS ✓')});
+}
+function finishSetup(){
+ const daily=setup.days.map(d=>({index:d.index,date:d.date,status:'pending',goals:[],completedAt:null}));
+ state.active={id:uid(),name:setup.name,startDate:setup.start,endDate:setup.end,totalDays:setup.total,daily,createdAt:new Date().toISOString(),goalPromptedDate:null};
+ save();closeCreate();renderAll();goView('home');showToast('CHALLENGE CREATED ✓');
+ setTimeout(promptTodayGoals,450);
+}
+
+function exportPoster(r){
+ const days=Array.isArray(r.daily)?r.daily:[],W=1400;
+ const pad=70, headerH=560, rowGap=14, rowH=70;
+ const goalLines=days.reduce((n,d)=>n+Math.max(1,(d.goalItems||[]).length),0);
+ const H=Math.max(1500,headerH+days.length*rowH+goalLines*27+120);
+ const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;const c=canvas.getContext('2d');
+
+ const bg=c.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#020307');bg.addColorStop(.5,'#090c14');bg.addColorStop(1,'#030407');c.fillStyle=bg;c.fillRect(0,0,W,H);
+ function glow(x,y,r,col){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2)}
+ glow(1160,140,400,'rgba(22,120,255,.14)');glow(180,610,360,'rgba(226,27,45,.13)');
+ c.strokeStyle='#e21b2d';c.lineWidth=5;c.strokeRect(22,22,W-44,H-44);c.strokeStyle='#283243';c.lineWidth=2;c.strokeRect(38,38,W-76,H-76);
+ function rr(x,y,w,h,r,fill,stroke='#303949'){c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=fill;c.fill();c.strokeStyle=stroke;c.lineWidth=2;c.stroke()}
+ function txt(t,x,y,size,col='#f4f5f7',weight='700',align='left'){c.fillStyle=col;c.font=weight+' '+size+'px Arial';c.textAlign=align;c.textBaseline='alphabetic';c.fillText(String(t),x,y)}
+ function wrap(t,max){const a=String(t).split(/\s+/),o=[];let cur='';a.forEach(w=>{const n=cur?cur+' '+w:w;if(n.length>max&&cur){o.push(cur);cur=w}else cur=n});if(cur)o.push(cur);return o.length?o:['']}
+ function card3d(x,y,w,h){c.save();c.shadowColor='rgba(0,0,0,.8)';c.shadowBlur=22;c.shadowOffsetY=12;rr(x,y,w,h,20,'#090c13');c.restore();c.strokeStyle='rgba(255,255,255,.055)';c.beginPath();c.moveTo(x+20,y+2);c.lineTo(x+w-20,y+2);c.stroke()}
+ function rule(y){const g=c.createLinearGradient(pad,0,W-pad,0);g.addColorStop(0,'#e21b2d');g.addColorStop(.5,'#303847');g.addColorStop(1,'#1678ff');c.strokeStyle=g;c.lineWidth=2;c.beginPath();c.moveTo(pad,y);c.lineTo(W-pad,y);c.stroke()}
+
+ txt('MS',78,112,58,'#e21b2d','900');txt('HABIT',184,112,58,'#f4f5f7','900');txt('MACRAS',386,112,58,'#1678ff','900');
+ txt('V2 • COMPLETE CHALLENGE RECORD',W-78,106,15,'#929baa','800','right');txt('DISCIPLINE • CONSISTENCY • TRANSFORMATION',W/2,146,17,'#9ca5b5','700','center');rule(172);
+ card3d(70,200,W-140,220);txt('CHALLENGE',100,240,14,'#e21b2d','900');txt(String(r.name).toUpperCase(),100,286,42,'#fff','900');txt('START DATE',100,330,12,'#8993a3','800');txt(fmt(r.startDate),100,356,21,'#f4f5f7','800');txt('END DATE',430,330,12,'#8993a3','800');txt(fmt(r.endDate),430,356,21,'#f4f5f7','800');
+ c.save();c.shadowColor='rgba(22,120,255,.35)';c.shadowBlur=28;rr(W-365,242,250,128,24,'#07172f','#1678ff');c.restore();txt('100%',W-240,306,50,'#65a8ff','900','center');txt('COMPLETE',W-240,340,16,'#fff','900','center');
+
+ let y=455;const statW=285,gap=20;[['TOTAL DAYS',r.totalDays],['COMPLETED DAYS',r.completedDays],['MISSED DAYS',days.filter(x=>x.status==='missed').length],['COMPLETION','100%']].forEach((s,i)=>{const x=70+i*(statW+gap);card3d(x,y,statW,92);txt(s[0],x+statW/2,y+34,11,'#8c96a6','800','center');txt(s[1],x+statW/2,y+70,27,i===3?'#5fa5ff':'#f4f5f7','900','center')});
+ y=590;txt('DAILY HISTORY + INDIVIDUAL GOALS',W/2,y,23,'#e21b2d','900','center');txt('EVERY DAY • EVERY GOAL • FULL RECORD',W/2,y+29,13,'#8e97a6','700','center');rule(y+52);y+=78;
+
+ days.forEach(d=>{
+  const items=Array.isArray(d.goalItems)?d.goalItems:[],extra=items.length?items.length*26+10:35,h=Math.max(rowH,extra+48);
+  card3d(pad,y,W-2*pad,h);
+  txt('DAY '+String(d.index).padStart(2,'0'),pad+20,y+28,16,'#fff','900');
+  txt(fmt(d.date),pad+150,y+28,12,'#8f98a8','700');
+  const col=d.status==='completed'?'#55dc68':d.status==='missed'?'#ff596a':'#7d8796';txt(d.status.toUpperCase(),W-pad-20,y+28,12,col,'900','right');
+  if(items.length){
+   items.forEach((g,i)=>{const yy=y+55+i*26;txt(g.done?'✓':'○',pad+24,yy,15,g.done?'#55dc68':'#70798a','900');const lines=wrap(g.text,105);txt(lines[0],pad+48,yy,14,'#e9ebef','700');if(lines.length>1)lines.slice(1,2).forEach((ln,j)=>txt(ln,pad+48,yy+18+j*18,12,'#aab1bc','600'))});
+  }else txt('NO GOALS ASSIGNED',pad+48,y+58,12,'#7f8794','700');
+  y+=h+rowGap;
+ });
+ const fy=Math.max(y+20,H-100);card3d(70,fy,W-140,62);txt('MS HABIT MACRAS',W/2,fy+27,18,'#f3f4f6','900','center');txt('LOCAL RECORD • KEEP SHOWING UP',W/2,fy+48,11,'#5fa5ff','800','center');
+ const a=document.createElement('a');a.download='MS-HABIT-MACRAS-'+safeName(r.name)+'.png';a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();showToast('CHALLENGE FILE SAVED ✓');
+}
+
+function goView(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+ document.getElementById(v+'View').classList.add('active');
+ document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
+ if(v==='home')renderHome();if(v==='track')renderTrack();if(v==='records')renderRecords();
+ document.getElementById('menu').classList.remove('open');mainScrollTop();
+}
+function mainScrollTop(){document.querySelector('main').scrollTo({top:0,behavior:'smooth'})}
+function renderAll(){renderHome();renderTrack();renderRecords();document.getElementById('trackNav').style.opacity=state.active?'1':'.45'}
+
+document.getElementById('createBtn').addEventListener('click',openCreate);
+document.getElementById('cancelCreateBtn').addEventListener('click',closeCreate);
+document.getElementById('continueSetupBtn').addEventListener('click',continueSetup);
+document.getElementById('backDetailsBtn').addEventListener('click',()=>{document.getElementById('setupGoals').style.display='none';document.getElementById('setupDetails').style.display='block';document.getElementById('createTitle').textContent='CREATE YOUR CHALLENGE'});
+document.getElementById('finishSetupBtn').addEventListener('click',finishSetup);
+document.getElementById('copyNextBtn').addEventListener('click',copyGoalsToNext);
+document.getElementById('copySelectedBtn').addEventListener('click',copyGoalsSelected);
+document.getElementById('cStart').addEventListener('input',updateDuration);document.getElementById('cEnd').addEventListener('input',updateDuration);
+document.getElementById('sheetBack').addEventListener('click',e=>{if(e.target.id==='sheetBack')closeCreate()});
+document.getElementById('menuBtn').addEventListener('click',e=>{e.stopPropagation();document.getElementById('menu').classList.toggle('open')});
+document.addEventListener('click',e=>{if(!e.target.closest('#menu')&&!e.target.closest('#menuBtn'))document.getElementById('menu').classList.remove('open')});
+document.getElementById('instructionsBtn').addEventListener('click',()=>goView('instructions'));
+document.getElementById('aboutBtn').addEventListener('click',()=>showToast('MS HABIT MACRAS V2 • OFFLINE'));
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.view==='track'&&!state.active){showToast('CREATE A CHALLENGE FIRST');return}goView(b.dataset.view)}));
+renderAll();
+setTimeout(promptTodayGoals,500);
+})();
+</script>
+</body>
+</html>
